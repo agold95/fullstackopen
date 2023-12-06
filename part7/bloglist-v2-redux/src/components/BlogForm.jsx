@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createBlog } from "../reducers/blogReducer";
+import { notify } from "../reducers/notificationReducer"
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+const BlogForm = () => {
+  const dispatch = useDispatch()
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    createBlog({ title, author, url });
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-  };
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    const blog = { title, author, url }
+    dispatch(createBlog(blog))
+    dispatch(notify(`a new blog '${blog.title}' by ${blog.author} added`, 5))
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+  }
 
   return (
     <div>
@@ -43,7 +50,7 @@ const BlogForm = ({ createBlog }) => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm
