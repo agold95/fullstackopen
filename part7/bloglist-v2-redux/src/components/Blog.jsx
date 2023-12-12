@@ -1,7 +1,13 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { notify } from '../reducers/notificationReducer'
+import { updateBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, handleLikes, handleRemove, user }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
   const blogStyle = {
     paddingTop: 10,
@@ -11,35 +17,38 @@ const Blog = ({ blog, handleLikes, handleRemove, user }) => {
     marginBottom: 5,
   }
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const dispatchLike = async (id, blog) => {
+    try {
+      dispatch(updateBlog(id, blog))
+      dispatch(notify(`blog '${blog.title}' liked`, 5))
+    } catch (error) {
+      dispatch(notify(error.message))
+    }
+  }
 
-  const toggleVisibility = () => setVisible(!visible)
-
-  const deleteButton = blog.user.username === user.username ? true : false
+  const handleLikes = (blog) => {
+    const blogObj = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    dispatchLike(blog.id, blogObj)
+    setLikes(blogObj.likes)
+  }
 
   return (
     <div style={blogStyle} className="blog">
-      <div style={hideWhenVisible} className="title">
-        {blog.title} by: {blog.author}
-        <button onClick={toggleVisibility}>view</button>
-      </div>
-      <div style={showWhenVisible} className="blogContent">
+      <div className="blogContent">
         <p>
           {blog.title} by: {blog.author}
-          <button onClick={toggleVisibility}>hide</button>
         </p>
-        <p>{blog.url}</p>
+        <a href={blog.url}>{blog.url}</a>
         <p id="likes">
           Likes: {blog.likes}
           <button id="likeButton" onClick={() => handleLikes(blog)}>
             like
           </button>
         </p>
-        <p>{blog.user.username}</p>
-        {deleteButton && (
-          <button onClick={() => handleRemove(blog)}>delete</button>
-        )}
+        <p>added by {blog.user.username}</p>
       </div>
     </div>
   )

@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { notify } from '../reducers/notificationReducer'
-import { removeBlog, createBlog, updateBlog } from '../reducers/blogReducer'
+import { createBlog } from '../reducers/blogReducer'
 
-import Blog from './Blog'
 import Togglable from './Toggleable'
 import BlogForm from './BlogForm'
 
@@ -34,29 +34,14 @@ const BlogList = ({ blogs }) => {
     }
   }
 
-  const dispatchLike = async (id, blog) => {
-    try {
-      dispatch(updateBlog(id, blog))
-      dispatch(notify(`blog '${blog.title}' liked`, 5))
-    } catch (error) {
-      dispatch(notify(error.message))
-    }
-  }
-
-  const handleLikes = (blog) => {
-    const blogObj = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-    dispatchLike(blog.id, blogObj)
-  }
-
+  /*
   const handleRemove = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       dispatch(removeBlog(blog.id))
       dispatch(notify(`blog '${blog.title}' removed`, 5))
     }
   }
+  */
 
   return (
     <div>
@@ -67,15 +52,17 @@ const BlogList = ({ blogs }) => {
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm newBlog={newBlog} setNewBlog={setNewBlog} createNewBlog={createNewBlog} />
           </Togglable>
-          {blogs.map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLikes={handleLikes}
-              handleRemove={handleRemove}
-              user={user}
-            />
-          )}
+          <table>
+            <tbody>
+              {blogs.map(blog =>
+                <tr key={blog.id}>
+                  <td>
+                    <Link to={`/blogs/${blog.id}`}>{ blog.title }</Link>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       }
     </div>
