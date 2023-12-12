@@ -21,6 +21,14 @@ const blogSlice = createSlice({
         }
         return blog
       })
+    },
+    updateBlogComments(state, action) {
+      return state.map(blog => {
+        if (blog.id === action.payload.id) {
+          return { ...blog, comments: action.payload.comments }
+        }
+        return blog
+      })
     }
   }
 })
@@ -54,5 +62,12 @@ export const removeBlog = blog => {
   }
 }
 
-export const { setBlogs, addBlog, deleteBlog, updateBlogLikes } = blogSlice.actions
+export const commentBlog = (id, newComment) => {
+  return async dispatch => {
+    const updatedBlog = await blogService.comment(id, newComment)
+    dispatch(updateBlogComments(updatedBlog))
+  }
+}
+
+export const { setBlogs, addBlog, deleteBlog, updateBlogLikes, updateBlogComments } = blogSlice.actions
 export default blogSlice.reducer

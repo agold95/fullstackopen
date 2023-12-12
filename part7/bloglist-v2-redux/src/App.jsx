@@ -16,6 +16,8 @@ import Users from './components/Users'
 
 import blogService from './services/blogs'
 
+import { Button } from 'react-bootstrap'
+
 const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
@@ -61,11 +63,11 @@ const App = () => {
     return (
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
+          <Button onClick={() => setLoginVisible(true)}>log in</Button>
         </div>
         <div style={showWhenVisible}>
           <LoginForm />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
+          <Button onClick={() => setLoginVisible(false)}>cancel</Button>
         </div>
       </div>
     )
@@ -83,12 +85,14 @@ const App = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
-      <Link to="/">Blogs</Link>
-      <Link to="/users">Users</Link>
+      <div className='navbar'>
+        <p className='navbar-item'><Link to="/">Blogs</Link></p>
+        <p className='navbar-item'><Link to="/users">Users</Link></p>
+        <p className='navbar-item'>{user.name} logged in</p>
+        <p className='navbar-item'><Logout username={user.name} handleLogout={handleLogout} /></p>
+      </div>
+      <h2>blog app</h2>
       <Notification />
-      <p>{user.name} logged in</p>
-      <Logout username={user.name} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<BlogList blogs={blogs} />} />
         <Route path="/blogs/:id" element={<Blog blog={blog} />} />

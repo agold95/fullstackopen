@@ -8,6 +8,8 @@ import { createBlog } from '../reducers/blogReducer'
 import Togglable from './Toggleable'
 import BlogForm from './BlogForm'
 
+import { Table } from 'react-bootstrap'
+
 const BlogList = ({ blogs }) => {
   const user = useSelector(state => state.user)
 
@@ -52,7 +54,7 @@ const BlogList = ({ blogs }) => {
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm newBlog={newBlog} setNewBlog={setNewBlog} createNewBlog={createNewBlog} />
           </Togglable>
-          <table>
+          <Table striped bordered hover>
             <tbody>
               {blogs.map(blog =>
                 <tr key={blog.id}>
@@ -62,7 +64,7 @@ const BlogList = ({ blogs }) => {
                 </tr>
               )}
             </tbody>
-          </table>
+          </Table>
         </div>
       }
     </div>

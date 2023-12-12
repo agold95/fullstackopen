@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { notify } from '../reducers/notificationReducer'
-import { updateBlog } from '../reducers/blogReducer'
+import { updateBlog, commentBlog } from '../reducers/blogReducer'
+
+import { Button } from 'react-bootstrap'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
 
-  const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
+  const [comment, setComment] = useState('')
 
   const blogStyle = {
     paddingTop: 10,
@@ -35,20 +37,47 @@ const Blog = ({ blog }) => {
     setLikes(blogObj.likes)
   }
 
+  const handleComment = async (event) => {
+    try {
+      event.preventDefault()
+      dispatch(commentBlog(blog.id, comment))
+      setComment('')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div style={blogStyle} className="blog">
       <div className="blogContent">
-        <p>
+        <h2>
           {blog.title} by: {blog.author}
-        </p>
+        </h2>
         <a href={blog.url}>{blog.url}</a>
         <p id="likes">
           Likes: {blog.likes}
-          <button id="likeButton" onClick={() => handleLikes(blog)}>
+          <Button id="likeButton" onClick={() => handleLikes(blog)}>
             like
-          </button>
+          </Button>
         </p>
         <p>added by {blog.user.username}</p>
+      </div>
+      <div>
+        <h4>Comments</h4>
+        <form onSubmit={handleComment}>
+          <input
+            type="text"
+            name="comment"
+            placeholder='comment'
+            onChange={({ target }) => setComment(target.value)}
+          />
+          <Button type='submit'>Add comment</Button>
+        </form>
+        <ul>
+          {blog.comments.map((comment, blog) => {
+            return <li key={blog}>{ comment }</li>
+          })}
+        </ul>
       </div>
     </div>
   )

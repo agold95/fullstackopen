@@ -1,3 +1,5 @@
+import { Button } from "react-bootstrap"
+
 const BlogForm = ({ newBlog, setNewBlog, createNewBlog }) => {
 
   const handleNewBlog = async (event) => {
@@ -28,9 +30,9 @@ const BlogForm = ({ newBlog, setNewBlog, createNewBlog }) => {
           onChange={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
         />
         <br />
-        <button id="createBlog" type="submit">
+        <Button id="createBlog" type="submit">
           save
-        </button>
+        </Button>
       </form>
     </div>
   )

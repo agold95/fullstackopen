@@ -7,6 +7,8 @@ import { notify } from '../reducers/notificationReducer'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
+import { Button } from 'react-bootstrap'
+
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -55,9 +57,9 @@ const LoginForm = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button id="login-button" type="submit">
+        <Button id="login-button" type="submit">
           login
-        </button>
+        </Button>
       </form>
     </div>
   )

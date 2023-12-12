@@ -1,6 +1,8 @@
+import { Button } from "react-bootstrap"
+
 const Logout = ({ username, handleLogout }) => {
   return (
-    <button onClick={handleLogout}>logout</button>
+    <Button onClick={handleLogout}>logout</Button>
   )
 }
 

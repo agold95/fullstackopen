@@ -1,5 +1,5 @@
-import axios from "axios"
-const baseUrl = "/api/blogs"
+import axios from 'axios'
+const baseUrl = '/api/blogs'
 
 let token = null
 
@@ -39,4 +39,15 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, create, setToken, update, remove }
+const comment = async (id, newComment) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.post(`${baseUrl}/${id}/comments`, {
+    comment: newComment,
+  }, config)
+  return response.data
+}
+
+export default { getAll, create, setToken, update, remove, comment }
