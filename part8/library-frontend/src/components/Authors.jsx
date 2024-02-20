@@ -1,6 +1,6 @@
 import AuthorForm from "./AuthorForm"
 
-const Authors = ({ show, authors, setError }) => {
+const Authors = ({ show, authors, setError, token }) => {
   if (!show) {
     return null
   }
@@ -23,8 +23,12 @@ const Authors = ({ show, authors, setError }) => {
             </tr>
           ))}
         </tbody>
-          </table>
-          <AuthorForm setError={setError} show={show} authors={authors} />
+      </table>
+      {!token ? (
+        null
+      ) : (
+        <AuthorForm setError={setError} show={show} authors={authors} />
+      )}
     </div>
   )
 }

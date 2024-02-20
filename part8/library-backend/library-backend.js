@@ -93,23 +93,23 @@ const resolvers = {
     authorCount: async () => await Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       if (!args.author && !args.genre) {
-        return Book.find({})
+        return await Book.find({})
       } else if (args.author) {
-        return Book.find({ author: args.author })   
+        return await Book.find({ author: args.author })   
       } else if (args.genre) {
-        return Book.find({ genres: args.genre })
+        return await Book.find({ genres: args.genre })
       }
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: async () => await Author.find({}),
     me: (root, args, context) => {
       return context.currentUser
     },
   },
   Author: {
-    bookCount: (root) => Book.filter(b => b.author === root.name).length    
+    bookCount: async (root) => await Book.filter(b => b.author === root.name).length    
   },
   Book: {
-    author: async (root) => Author.findOne({ _id: root.author })
+    author: async (root) => await Author.findOne({ _id: root.author })
   },
   Mutation: {
     addBook: async (root, args) => {
@@ -163,22 +163,22 @@ const resolvers = {
 
       return author
     },
-    editAuthor: (root, args) => {
-      const authorToUpdate = Author.find(a => a.name === args.name)
-
-      if (!authorToUpdate) {
-        throw new GraphQLError('This author does not exist', {
-          extensions: {
-            code: 'BAD_AUTHOR_EDIT_INPUT',
-            invalidArgs: args.name,
-            error
-          }
-        })
-      }
-
+    editAuthor: async (root, args) => {
       try {
-        const updatedAuthor = { ...authorToUpdate, born: args.setBornTo }
-        updatedAuthor.save()
+        const authorToUpdate = await Author.findOne({ name: args.name })
+        if (!authorToUpdate) {
+          throw new GraphQLError('This author does not exist', {
+            extensions: {
+              code: 'BAD_AUTHOR_EDIT_INPUT',
+              invalidArgs: args.name,
+              error
+            }
+          })
+        }
+
+        authorToUpdate.born = args.setBornTo
+        await authorToUpdate.save()
+        return authorToUpdate
       } catch {
         throw new GraphQLError('Editing author failed', {
           extensions: {
@@ -188,8 +188,6 @@ const resolvers = {
           }
         })
       }
-
-      return updatedAuthor  
     },
     createUser: async (root, args) => {
       const user = new User({ ...args })

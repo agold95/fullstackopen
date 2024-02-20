@@ -11,6 +11,7 @@ const PersonForm = ({ setError, show, authors }) => {
         refetchQueries: [{ query: ALL_AUTHORS }],
         onError: (error) => {
             const messages = error.graphQLErrors.map(e => e.message).join('\n')
+            console.log(messages)
             setError(messages)
         }
     })
