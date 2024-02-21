@@ -4,7 +4,7 @@ export const ALL_AUTHORS = gql`
   query {
     allAuthors {
       name,
-      born
+      born,
     }
   }
 `
@@ -63,6 +63,19 @@ export const GET_CURRENT_USER = gql`
     me {
       username
       favoriteGenre
+    }
+  }
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      author {
+        name
+      }
+      published
+      genres
     }
   }
 `

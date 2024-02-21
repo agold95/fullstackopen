@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -8,7 +8,23 @@ import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
 
-import { ALL_AUTHORS, ALL_BOOKS, GET_CURRENT_USER } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, GET_CURRENT_USER, BOOK_ADDED } from './queries'
+
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.name
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    }
+  })
+}
 
 const App = () => {
   const authorsResult = useQuery(ALL_AUTHORS)
@@ -20,6 +36,15 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded
+      notify(`${addedBook.title} added`)
+      console.log(`${addedBook.title} added`)
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+    }
+  })
 
   if (authorsResult.loading || booksResult.loading)  {
     return <div>loading...</div>
@@ -66,7 +91,7 @@ const App = () => {
       <Notify errorMessage={errorMessage} />
       <Authors show={page === 'authors'} authors={authorsResult.data.allAuthors} token={token} setError={notify} />
       <Books show={page === 'books'} books={booksResult.data.allBooks} />
-      <NewBook show={page === 'add'} setError={notify} />
+      <NewBook show={page === 'add'} authors={authorsResult.data.allAuthors} token={token} setError={notify} />
       <Recommendations show={page === 'recommend'} books={booksResult.data.allBooks} user={userResult.data.me} />
     </div>
   )
