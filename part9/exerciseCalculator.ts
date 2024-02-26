@@ -9,14 +9,14 @@ interface CalculateValues {
 }
 
 const parseArray = (args: string[]): number[] => {
-  const userData = args.filter((arg, i) => i > 1);
+    const userData = args.filter((_arg, i) => i > 1);
     return userData.map((arg) => {
         if (isNaN(Number(arg))) {
-            throw new Error('Exercise amount must be a number.')
+            throw new Error('Exercise amount must be a number.');
         }
         return Number(arg);
     });
-}
+};
 
 const calculateExercise = (exercise: number[]): CalculateValues => {
     const periodLength = exercise.length - 1;
@@ -27,7 +27,7 @@ const calculateExercise = (exercise: number[]): CalculateValues => {
     const success = average >= target;
     let rating: number;
     let ratingDescription: string;
-    let successRate = average / target;
+    const successRate = average / target;
 
     if (successRate < 0.75) {
         rating = 1;
@@ -49,7 +49,7 @@ const calculateExercise = (exercise: number[]): CalculateValues => {
         target,
         average
     };
-}
+};
 
 try {
     const data = parseArray(process.argv);
@@ -57,7 +57,9 @@ try {
 } catch (error: unknown) {
     let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message
+        errorMessage += ' Error: ' + error.message;
     }
     console.log(errorMessage);
 }
+
+export default calculateExercise
