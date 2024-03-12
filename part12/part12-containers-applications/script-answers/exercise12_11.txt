@@ -1,0 +1,6 @@
+docker exec -it 6d bash
+redis-cli
+KEYS *
+GET count
+SET count 9001
+DEL count

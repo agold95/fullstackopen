@@ -1,0 +1,3 @@
+docker start -i xenodochial_mayer
+nano /usr/src/app/index.js
+exit
