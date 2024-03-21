@@ -7,5 +7,5 @@ services:
     volumes:
       - ./:/usr/src/app
     ports:
-      - 3001:3001
+      - 5001:3000
     container_name: todo-frontend-dev

@@ -1,4 +1,4 @@
-docker exec -it 6d bash
+docker exec -it 26c bash
 redis-cli
 KEYS *
 GET count

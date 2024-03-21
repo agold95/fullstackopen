@@ -1,4 +1,4 @@
-docker exec -it 9e bash
+docker exec -it 044 bash
 mongosh -u root -p example
 show dbs
 use the_database
